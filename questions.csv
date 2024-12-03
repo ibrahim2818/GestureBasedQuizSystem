@@ -1,4 +1,4 @@
-Question , Option 1, Option 2, Option 3, Option 4, Correct Option
+Question,Option 1,Option 2,Option 3,Option 4,Correct Option
 What is the correct file extension for Python files?,a) .pt,b) .py,c) .pyt,d) .python,b) .py
 Which keyword is used to define a function in Python?,a) func,b) define,c) def,d) function,c) def
 Which of the following is not a valid variable name in Python?,a) 1name,b) name_1,c) _name,d) name1,a) 1name
