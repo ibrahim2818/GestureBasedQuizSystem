@@ -24,6 +24,8 @@ except FileNotFoundError:
     print("Error: 'questions.csv' not found.")
     exit()
 
+wrong_answer=[]
+
 # Initialize hand detector
 detector = HandDetector()
 
@@ -83,6 +85,8 @@ while cap.isOpened():
                         score += 1
                     else:
                         cv2.putText(img, "Wrong!", (10, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                        wrong_answer.append(current_question)
+                        print(wrong_answer)
 
                     # Move to next question
                     current_question += 1
@@ -120,3 +124,7 @@ cap.release()
 cv2.destroyAllWindows()
 
 print(f"Final Score: {score}/{total_questions}")
+with open("score.txt", "w") as file:
+    file.write(f"{score} /{total_questions}\n{wrong_answer}")
+
+import final
