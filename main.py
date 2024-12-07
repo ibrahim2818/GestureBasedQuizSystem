@@ -13,8 +13,12 @@ def counting(x):
         count += 1
     if x[20][2] < x[18][2]:
         count += 1
-    if x[4][1] < x[2][1]:
-        count += 1
+    if x[1][1]<x[17][1]:
+        if x[4][1] < x[2][1]:
+            count += 1
+    if x[1][1]>x[17][1]:
+        if x[4][1] > x[2][1]:
+            count += 1
     return count
 
 # Load questions dataset
