@@ -38,43 +38,43 @@ class FaceDetector:
         return 0  # If no detections, return 0
 
 
-def main():
-    ptime = 0
-
-    cap = cv2.VideoCapture(0)
-    cap.set(3, 1280)
-    cap.set(4, 720)
-    detector = FaceDetector(minDetectionCon=0.75)
-
-    while cap.isOpened():
-        success, img = cap.read()
-        if not success:
-            print("Ignoring empty camera frame.")
-            continue
-
-        # Process the image and get face count
-        img, face_count = detector.findFaces(img)  # Process the image to find faces
-        ctime = time.time()
-        fps = 1 / (ctime - ptime)
-        ptime = ctime
-
-        # Display the FPS and face count
-        cv2.putText(img, f"FPS: {int(fps)}", (10, 70), cv2.FONT_HERSHEY_PLAIN,
-                    3, (255, 0, 255), 3)
-        cv2.putText(img, f"Faces: {face_count}", (10, 130), cv2.FONT_HERSHEY_PLAIN,
-                    3, (0, 255, 0), 3)
-
-        cv2.imshow("Image", img)
-
-        # Print face count to the console
-        print(f"Faces detected: {face_count}")
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     ptime = 0
+#
+#     cap = cv2.VideoCapture(0)
+#     cap.set(3, 1280)
+#     cap.set(4, 720)
+#     detector = FaceDetector(minDetectionCon=0.75)
+#
+#     while cap.isOpened():
+#         success, img = cap.read()
+#         if not success:
+#             print("Ignoring empty camera frame.")
+#             continue
+#
+#         # Process the image and get face count
+#         img, face_count = detector.findFaces(img)  # Process the image to find faces
+#         ctime = time.time()
+#         fps = 1 / (ctime - ptime)
+#         ptime = ctime
+#
+#         # Display the FPS and face count
+#         cv2.putText(img, f"FPS: {int(fps)}", (10, 70), cv2.FONT_HERSHEY_PLAIN,
+#                     3, (255, 0, 255), 3)
+#         cv2.putText(img, f"Faces: {face_count}", (10, 130), cv2.FONT_HERSHEY_PLAIN,
+#                     3, (0, 255, 0), 3)
+#
+#         cv2.imshow("Image", img)
+#
+#         # Print face count to the console
+#         print(f"Faces detected: {face_count}")
+#
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#             break
+#
+#     cap.release()
+#     cv2.destroyAllWindows()
+#
+#
+# if __name__ == "__main__":
+#     main()

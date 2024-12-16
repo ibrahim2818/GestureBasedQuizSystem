@@ -2,6 +2,7 @@ import pandas as pd
 import cv2
 from HandTracking import HandDetector
 import time
+from faceDetect import FaceDetector
 
 def counting(x):
     count = 0
@@ -32,7 +33,7 @@ wrong_answer=[]
 
 # Initialize hand detector
 detector = HandDetector()
-
+faceDetector = FaceDetector()
 # Initialize variables
 score = 0
 current_question = 0
@@ -40,11 +41,13 @@ total_questions = len(questions)
 question_start_time = time.time()
 answer_check_interval = 5  # Interval for answer checking
 last_answer_check = time.time()
+extra_face= None
+
 
 # Setup video capture
 cap = cv2.VideoCapture(0)
-cap.set(3, 1280)  # Set width
-cap.set(4, 720)   # Set height
+cap.set(3, 640)  # Set width
+cap.set(4, 360)   # Set height
 ptime = 0  # For FPS calculation
 
 while cap.isOpened():
@@ -54,6 +57,10 @@ while cap.isOpened():
         continue
 
     img = detector.findHands(img)
+    img, face_count = faceDetector.findFaces(img)
+
+
+
     beforeAns_time = time.time() - question_start_time
 
     # Display question and options
@@ -71,6 +78,24 @@ while cap.isOpened():
     cv2.putText(img, f"3: {option3}", (10, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
     cv2.putText(img, f"4: {option4}", (10, 300), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
+
+    if faceDetector.faceCount(img)>1:
+        cv2.putText(img, "Warning", (400,350), cv2.FONT_HERSHEY_SIMPLEX, 4, (0,0,255), 3)
+        if extra_face is None:
+            extra_face=time.time()
+        else:
+            extra_face_time= time.time()-extra_face
+            if extra_face_time>5:
+                current_question+= 1
+    else:
+        extra_face= None
+
+
+
+
+
+
+
     # Show "Answer now" prompt after 20 seconds
     if beforeAns_time > 10:
         cv2.putText(img, "Answer now", (500, 700), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
@@ -80,17 +105,17 @@ while cap.isOpened():
             position = detector.findPosition(img)
             if position:
                 finger_count = counting(position)
-                print(f"Number of fingers detected: {finger_count}")
+                #print(f"Number of fingers detected: {finger_count}")
 
                 if 1 <= finger_count <= 4:
                     selected_option = questions[f'Option {finger_count}'][current_question]
                     if selected_option == correct_option:
-                        cv2.putText(img, "Correct!", (10, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                        #cv2.putText(img, "Correct!", (10, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                         score += 1
                     else:
-                        cv2.putText(img, "Wrong!", (10, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                        #cv2.putText(img, "Wrong!", (10, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                         wrong_answer.append(current_question)
-                        print(wrong_answer)
+                      #  print(wrong_answer)
 
                     # Move to next question
                     current_question += 1
@@ -101,12 +126,13 @@ while cap.isOpened():
                     question_start_time = time.time()
                     last_answer_check = question_start_time
             else:
-                print("No hands detected.")
+                # print("No hands detected.")
+                pass
             last_answer_check = time.time()
 
     # Automatically skip to the next question after 30 seconds
     if beforeAns_time > 30:
-        print("Time's up for this question.")
+        #print("Time's up for this question.")
         current_question += 1
         if current_question >= total_questions:
             break
